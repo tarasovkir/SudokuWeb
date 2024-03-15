@@ -98,13 +98,12 @@ function checkSudokuGrid(playerArray) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    //Кнопки и создание таблицы
     const gridSize = 9;
     const solveButton = document.getElementById("generate-btn");
     solveButton.addEventListener('click', generateAndFillSudokuGrid);
-
     const checkButton = document.getElementById("check-btn");
     checkButton.addEventListener('click', getAndCheckSudokuGrid);
-
     const sudokuGrid = document.getElementById("sudoku-grid");
     for (let row = 0; row < gridSize; row++) {
         const newRow = document.createElement("tr");
@@ -122,9 +121,11 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function generateAndFillSudokuGrid() {
+    // Генерация поля и вывод на экран
     const gridSize = 9;
     const sudokuArray = generateSudoku();
-    const sudokuPlayable = makeSudokuPlayable(sudokuArray, 1);
+    //console.table(sudokuArray);
+    const sudokuPlayable = makeSudokuPlayable(sudokuArray, 40);
     for (let row = 0; row < gridSize; row++) {
         for (let col = 0; col < gridSize; col++) {
             const cellId = `cell-${row}-${col}`;
@@ -132,9 +133,26 @@ async function generateAndFillSudokuGrid() {
             cell.value = sudokuPlayable[row][col];
         }
     }
+    // Определение ячеек, которые нельзя изменять
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            const cellId = `cell-${row}-${col}`;
+            const cell = document.getElementById(cellId);
+            if (sudokuPlayable[row][col] !== null) {
+                cell.classList.add("not-allowed");
+                cell.setAttribute("contenteditable", "false");
+                cell.style.pointerEvents = "none";
+            } else {
+                cell.classList.remove("not-allowed");
+                cell.setAttribute("contenteditable", "true");
+                cell.style.pointerEvents = "auto";
+            }
+        }
+    }
 }
 
 async function getAndCheckSudokuGrid() {
+    // Проверка поля на правильность
     const gridSize = 9;
     const playerArray = [];
     for (let row = 0; row < gridSize; row++) {
@@ -146,11 +164,10 @@ async function getAndCheckSudokuGrid() {
         }
     }
     let mistakes = checkSudokuGrid(playerArray);
-    console.table(playerArray);
     if (mistakes === 0) {
-        alert("Решено");
+        alert("Верно");
     }
     else {
-        alert("Ошибок: "  + mistakes);
+        alert("Ошибка");
     }
 }
