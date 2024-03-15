@@ -165,7 +165,7 @@ async function getAndCheckSudokuGrid() {
     }
     let mistakes = checkSudokuGrid(playerArray);
     if (mistakes === 0) {
-        alert("Верно");
+        alert("Верно!");
     }
     else {
         alert("Ошибка");
