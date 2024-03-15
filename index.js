@@ -168,6 +168,6 @@ async function getAndCheckSudokuGrid() {
         alert("Верно!");
     }
     else {
-        alert("Ошибка");
+        alert("Ошибка!");
     }
 }
