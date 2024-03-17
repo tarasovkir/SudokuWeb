@@ -77,3 +77,24 @@ button:hover{
     background-color: #dddddd;
     transition: all 0.2s ease-in-out;
 }
+
+.radio-container{
+    display: flex;
+    justify-content: center;
+}
+
+.radio-tile-group{
+    display: flex;
+    justify-content: center;
+}
+
+.input-container{
+    position: relative;
+    height: 7rem;
+    width: 7rem;
+    margin: 0.5rem;
+}
+
+.input-container input{
+    
+}

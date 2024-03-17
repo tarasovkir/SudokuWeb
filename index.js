@@ -121,11 +121,20 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function generateAndFillSudokuGrid() {
+    // Выбор сложности
+    const radioButtons = document.querySelectorAll('input[name="radio"]');
+    let selectedSize;
+    for (const radioButton of radioButtons) {
+        if (radioButton.checked) {
+            selectedSize = radioButton.value;
+            break;
+        }
+    }
     // Генерация поля и вывод на экран
     const gridSize = 9;
     const sudokuArray = generateSudoku();
     //console.table(sudokuArray);
-    const sudokuPlayable = makeSudokuPlayable(sudokuArray, 40);
+    const sudokuPlayable = makeSudokuPlayable(sudokuArray, selectedSize);
     for (let row = 0; row < gridSize; row++) {
         for (let col = 0; col < gridSize; col++) {
             const cellId = `cell-${row}-${col}`;
