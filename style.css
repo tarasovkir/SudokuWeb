@@ -78,6 +78,16 @@ button:hover{
     transition: all 0.2s ease-in-out;
 }
 
+.mistake{
+    background-color: #ff000060;
+    transition: all 0.2s ease-in-out;
+}
+
+.not-mistake{
+    background-color: #00ff006d;
+    transition: all 0.2s ease-in-out;
+}
+
 .radio-container{
     display: flex;
     justify-content: center;
@@ -96,5 +106,7 @@ button:hover{
 }
 
 .input-container input{
-    
+
+    height: 20%;
+    width: 20%;
 }

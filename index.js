@@ -1,3 +1,5 @@
+let sudokuMatrix = [];
+let auto = false;
 function generateSudoku() {
     const size = 9;
     const grid = [];
@@ -8,7 +10,7 @@ function generateSudoku() {
         }
     }
     fillGrid(grid, 0, 0);
-    return grid;
+    sudokuMatrix = grid;
 }
 
 function fillGrid(grid, row, col) {
@@ -71,39 +73,38 @@ function usedInBox(grid, startRow, startCol, num) {
 
 function makeSudokuPlayable(grid, emptyCells) {
     let iteration = 0;
+    newMatrix = grid;
     while (iteration < emptyCells) {
     let x = Math.floor(Math.random() * 9);
     let y = Math.floor(Math.random() * 9);
-        if (grid[x][y] !== null) {
-            grid[x][y] = null;
+        if (newMatrix[x][y] !== null) {
+            newMatrix[x][y] = null;
             iteration++;
         }
     }
-    return grid;
+    return newMatrix;
 }
 
-function checkSudokuGrid(playerArray) {
-    let mistakes = 0;
-    for (let i = 0; i<9; i++) {
-        for (let j = 0; j<9; j++) {
-            let check = playerArray[i][j];
-            playerArray[i][j] = 0;
-            if (!isValid(playerArray, i, j, check)) {
-                mistakes++;
-            }
-            playerArray[i][j] = check;
-        }
-    }
-    return mistakes;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    //Кнопки и создание таблицы
     const gridSize = 9;
-    const solveButton = document.getElementById("generate-btn");
-    solveButton.addEventListener('click', generateAndFillSudokuGrid);
+    // Кнопка создания
+    const generateButton = document.getElementById("generate-btn");
+    generateButton.addEventListener('click', generateAndFillSudokuGrid);
+    // Кнопка проверки
     const checkButton = document.getElementById("check-btn");
     checkButton.addEventListener('click', getAndCheckSudokuGrid);
+    // Генерация поля по радио кнопке
+    const radioButtons = document.querySelectorAll('input[name="radio"]');
+    radioButtons.forEach(radioButton => {
+        radioButton.addEventListener('change', function () {
+            generateAndFillSudokuGrid();
+        });
+    });
+    // Создание таблицы
     const sudokuGrid = document.getElementById("sudoku-grid");
     for (let row = 0; row < gridSize; row++) {
         const newRow = document.createElement("tr");
@@ -118,6 +119,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         sudokuGrid.appendChild(newRow);
     }
+    // Авто проверка или нет 
+    const autoSwitch = document.getElementById('autocheck');
+    autoSwitch.addEventListener('change', function () {
+        if (autoSwitch.checked) {
+            auto = true;
+        } else {
+            auto = false;
+        }
+    });
+    // Изменение в ячейке
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.addEventListener('input', function (event) {
+            const cellId = event.target.id;
+            const coordinates = extractCoordinates(cellId);
+            getAndCheckCell(coordinates.row, coordinates.col);
+        });
+    });
+    function extractCoordinates(cellId) {
+        const [, row, col] = cellId.split('-');
+        return { row: parseInt(row), col: parseInt(col) };
+    }
+    // Генерация при загрузке страницы
+    generateAndFillSudokuGrid();
 });
 
 async function generateAndFillSudokuGrid() {
@@ -131,22 +156,27 @@ async function generateAndFillSudokuGrid() {
         }
     }
     // Генерация поля и вывод на экран
+    generateSudoku();
     const gridSize = 9;
-    const sudokuArray = generateSudoku();
-    //console.table(sudokuArray);
-    const sudokuPlayable = makeSudokuPlayable(sudokuArray, selectedSize);
+    const sudokuMatrixCopy = []; 
+    for (let i = 0; i < gridSize; i++) {
+        sudokuMatrixCopy.push([]);
+        for (let j = 0; j < gridSize; j++) {
+            sudokuMatrixCopy[i].push(0);
+        }
+    }
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            sudokuMatrixCopy[row][col] = sudokuMatrix[row][col];
+        }
+    }
+    const sudokuPlayable = makeSudokuPlayable(sudokuMatrixCopy, selectedSize);
     for (let row = 0; row < gridSize; row++) {
         for (let col = 0; col < gridSize; col++) {
             const cellId = `cell-${row}-${col}`;
             const cell = document.getElementById(cellId);
             cell.value = sudokuPlayable[row][col];
-        }
-    }
-    // Определение ячеек, которые нельзя изменять
-    for (let row = 0; row < gridSize; row++) {
-        for (let col = 0; col < gridSize; col++) {
-            const cellId = `cell-${row}-${col}`;
-            const cell = document.getElementById(cellId);
+            cell.classList.remove("not-mistake");
             if (sudokuPlayable[row][col] !== null) {
                 cell.classList.add("not-allowed");
                 cell.setAttribute("contenteditable", "false");
@@ -156,8 +186,10 @@ async function generateAndFillSudokuGrid() {
                 cell.setAttribute("contenteditable", "true");
                 cell.style.pointerEvents = "auto";
             }
+            //await sleep(20);
         }
     }
+    //console.table(sudokuMatrix);
 }
 
 async function getAndCheckSudokuGrid() {
@@ -172,11 +204,63 @@ async function getAndCheckSudokuGrid() {
             playerArray[row][col] = cellValue !== "" ? parseInt(cellValue) : 0;
         }
     }
-    let mistakes = checkSudokuGrid(playerArray);
+    let mistakes = 0;
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            const cellId = `cell-${row}-${col}`;
+            const cell = document.getElementById(cellId);
+            if (cell.value !== "" && !cell.classList.contains("not-allowed")) {
+                if (sudokuMatrix[row][col] !== playerArray[row][col]) { 
+                    cell.classList.remove("not-mistake");
+                    cell.classList.add("mistake");
+                } else {
+                    cell.classList.remove("mistake");
+                    cell.classList.add("not-mistake");
+                }
+            }
+            if (sudokuMatrix[row][col] !== playerArray[row][col]) { 
+                mistakes++;
+            }
+            //await sleep(20);
+        }
+    }
+    //console.log(mistakes);
+    // Если решено полностью
     if (mistakes === 0) {
-        alert("Верно!");
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+                const cellId = `cell-${row}-${col}`;
+                const cell = document.getElementById(cellId);
+                cell.classList.remove("mistake");
+                cell.classList.remove("not-allowed");
+                cell.classList.add("not-mistake");
+                await sleep(20);
+            }
+        }
+    }
+}
+
+async function getAndCheckCell(row, col) {
+    if (auto) {
+const cellId = `cell-${row}-${col}`;
+    const cell = document.getElementById(cellId);
+    cell.classList.remove("not-mistake");
+    cell.classList.remove("mistake");
+    if (cell.value !== "") {
+        if (sudokuMatrix[row][col] !== parseInt(cell.value)) { 
+            cell.classList.remove("not-mistake");
+            cell.classList.add("mistake");
+        } 
+        else {
+            cell.classList.remove("mistake");
+            cell.classList.add("not-mistake");
+        }
     }
     else {
-        alert("Ошибка!");
+        cell.classList.remove("not-mistake");
+        cell.classList.remove("mistake");
+    }
+    console.log(sudokuMatrix[row][col]);
+    console.log(cell.value);
     }
 }
