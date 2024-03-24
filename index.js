@@ -144,6 +144,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!hasEmptyCells()) {
                 getAndCheckSudokuGrid();
             }
+            if (cell.value === '') {
+                cell.classList.remove("mistake");
+            }
+
+            
         });
     });
     cells.forEach(cell => {
@@ -236,6 +241,7 @@ async function getAndCheckSudokuGrid() {
                     cell.classList.add("not-mistake");
                     cell.setAttribute("contenteditable", "false");
                     cell.style.pointerEvents = "none";
+                    cell.blur();
                 }
             }
             if (sudokuMatrix[row][col] !== playerArray[row][col]) { 
@@ -256,6 +262,7 @@ async function getAndCheckSudokuGrid() {
                 cell.classList.add("not-mistake");
                 cell.setAttribute("contenteditable", "false");
                 cell.style.pointerEvents = "none";
+                cell.blur();
                 await sleep(20);
             }
         }
@@ -278,6 +285,7 @@ async function getAndCheckCell(row, col) {
                 cell.classList.add("not-mistake");
                 cell.setAttribute("contenteditable", "false");
                 cell.style.pointerEvents = "none";
+                cell.blur();
             }
         }
         else {
@@ -330,4 +338,9 @@ function resetTimer() {
     hours = 0;
     const timer = document.getElementById('timer');
     timer.textContent = '00:00:00';
+}
+
+function Digits(event) {
+    if ("123456789".indexOf(event.key) === -1)
+      event.preventDefault();
 }
