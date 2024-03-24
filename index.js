@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     // Изменение в ячейке
+    let previousValue = '';
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => {
         cell.addEventListener('input', function (event) {
@@ -147,8 +148,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (cell.value === '') {
                 cell.classList.remove("mistake");
             }
-
-            
+            if (isCellValueLongerThanOne(cell)) {
+                cell.value = previousValue;
+            } else {
+                previousValue = cell.value;
+            }
         });
     });
     cells.forEach(cell => {
@@ -343,4 +347,8 @@ function resetTimer() {
 function Digits(event) {
     if ("123456789".indexOf(event.key) === -1)
       event.preventDefault();
+}
+
+function isCellValueLongerThanOne(cell) {
+    return cell.value.length > 1;
 }
