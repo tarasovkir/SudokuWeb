@@ -148,11 +148,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (cell.value === '') {
                 cell.classList.remove("mistake");
             }
-            if (isCellValueLongerThanOne(cell)) {
-                cell.value = previousValue;
-            } else {
-                previousValue = cell.value;
-            }
+            cell.addEventListener('keydown', function (event) {
+                if (isCellValueLongerThanOne(cell)) {
+                    if (event.key !== 'Backspace') {
+                        event.preventDefault();
+                    }
+                }
+            });
+            cell.addEventListener('keydown', function (event) {
+                if (event.key.startsWith('Arrow')) {
+                    event.preventDefault();
+                }
+            });
         });
     });
     cells.forEach(cell => {
@@ -213,7 +220,6 @@ async function generateAndFillSudokuGrid() {
                 cell.setAttribute("contenteditable", "true");
                 cell.style.pointerEvents = "auto";
             }
-            //await sleep(20);
         }
     }
     //console.table(sudokuMatrix);
@@ -350,5 +356,5 @@ function Digits(event) {
 }
 
 function isCellValueLongerThanOne(cell) {
-    return cell.value.length > 1;
+    return cell.value.length >= 1;
 }

@@ -8,19 +8,10 @@
     <title>Судоку</title>
 </head>
 <body>
-    <h1>Судоку</h1>
-    <div class="sudoku-container">
-        <table>
-            <tbody id="sudoku-grid" onkeypress="Digits(event)">
-            </tbody>
-        </table>
+    <div class="timer-container">
+        <div id="timer" class="timer">00:00:00</div>
     </div>
-    <button id="generate-btn">Сгенерировать поле</button>
-    <button id="check-btn">Проверить поле</button>
-    <div class="checkbox">
-        <input type="checkbox" id="autocheck">
-        <label for="autocheck">Авто</label>
-    </div>
+
     <div class="radio-container">
         <div class="radio-tile-group">
             <div class="input-container">
@@ -55,6 +46,22 @@
             </div>
         </div>
     </div>
-    <div id="timer">00:00:00</div>
-</body>
+
+    <div class="sudoku-container">
+        <table>
+            <tbody id="sudoku-grid" onkeypress="Digits(event)">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="button-container">
+        <button id="generate-btn">Сгенерировать поле</button>
+        <button id="check-btn">Проверить поле</button>
+    </div>
+
+    <div class="checkbox">
+        <input type="checkbox" id="autocheck">
+        <label for="autocheck">Авто</label>
+    </div>
+    </body>
 </html>

@@ -14,10 +14,6 @@ body{
     height: 100vh;
 }
 
-h1{
-    font-weight: 500;
-}
-
 .sudoku-container{
     margin-top: 20px;
     display: flex;
@@ -65,7 +61,7 @@ button{
     color: #fff;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: all 0.3s ease;
 }
 
@@ -100,12 +96,25 @@ button:hover{
 
 .input-container{
     position: relative;
-    height: 7rem;
     width: 7rem;
-    margin: 0.5rem;
+    margin: 0rem;
 }
 
 .input-container input{
-    height: 20%;
-    width: 20%;
+    height: 50%;
+    width: 50%;
 }
+
+.timer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.timer {
+    font-size: 35px;
+    color: #000;
+    padding: 10px 20px;
+}
+
