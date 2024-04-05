@@ -175,6 +175,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // Генерация при загрузке страницы
     generateAndFillSudokuGrid();    
+
+
+
+    // Профиль
+    document.getElementById('profile-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('profile-window').style.display = 'block';
+    });
+    
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('profile-window').style.display = 'none';
+    });
 });
 
 async function generateAndFillSudokuGrid() {
