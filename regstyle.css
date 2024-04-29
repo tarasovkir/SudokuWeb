@@ -10,7 +10,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #4070f4;
+    background-color: #b0b0b0;
 }
 
 .container{
@@ -62,17 +62,6 @@ body{
     position: relative;
     font-size: 27px;
     font-weight: 600;
-}
-
-.form .title::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    background-color: #4070f4;
-    border-radius: 25px;
 }
 
 .form .input-field{
@@ -153,7 +142,7 @@ body{
 }
 
 .button input:hover{
-    background-color: #265df2;
+    background-color: #4070f4;
 }
 
 .form .login-signup{
