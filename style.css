@@ -167,15 +167,22 @@ button:hover {
 #table-records {
     border: 1px solid grey;
  }
- /* границы ячеек первого ряда таблицы */
- #table-records th {
+
+#table-records th {
     border: 1px solid grey;
  }
- /* границы ячеек тела таблицы */
- #table-records td {
+
+#table-records td {
     border: 1px solid grey;
  }
  
+ .pochtatext {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    height: 88%;
+  }
 
 
 
