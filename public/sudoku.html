@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="sudoku.js" defer></script>
+    <title>Судоку</title>
+</head>
+<body>
+    <div class="timer-container">
+        <div id="timer" class="timer">00:00:00</div>
+    </div>
+
+    <div class="radio-container">
+        <div class="radio-tile-group">
+            <div class="input-container">
+                <input id="very-easy" type="radio" name="radio" value="1">
+                <div class="radio-tile">
+                    <label for="very-easy">Очень легко</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <input id="easy" type="radio" name="radio" value="2">
+                <div class="radio-tile">
+                    <label for="easy">Легко</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <input id="normal" type="radio" name="radio" value="3" checked>
+                <div class="radio-tile">
+                    <label for="normal">Средне</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <input id="hard" type="radio" name="radio" value="4">
+                <div class="radio-tile">
+                    <label for="hard">Сложно</label>
+                </div>
+            </div>
+            <div class="input-container">
+                <input id="very-hard" type="radio" name="radio" value="5">
+                <div class="radio-tile">
+                    <label for="very-hard">Очень сложно</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sudoku-container">
+        <table>
+            <tbody id="sudoku-grid" onkeypress="Digits(event)">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="button-container">
+        <button id="generate-btn">Сгенерировать поле</button>
+        <button id="check-btn">Проверить поле</button>
+    </div>
+
+    <div class="checkbox">
+        <input type="checkbox" id="autocheck">
+        <label for="autocheck">Авто</label>
+    </div>
+
+    <button id="profile-button">Профиль</button>
+
+    <div id="profile-window">
+        <a href="#" class="close">Закрыть</a>
+        <div class="input-field">
+            <input type="email" id="email" class="email" placeholder="Почта">
+        </div>
+        <div class="input-field">
+            <input type="password" id="new-password" class="password" placeholder="Пароль">
+        </div>
+        <div class="input-field button">
+            <input type="submit" id="change-password-btn" value="Сменить пароль">
+        </div>
+        <div class="pochtatext">
+            <p>Запросить смену пароля можно по почте: pochta@mail.ru</p>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

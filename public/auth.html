@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="regstyle.css">   
+    <title>Вход</title> 
+</head>
+<body>
+    <div class="container">
+        <div class="forms">
+            <div class="form login">
+                <span class="title">Авторизация</span>
+                <form id="login-form">
+                    <div class="input-field">
+                        <input type="text" id="login-email" placeholder="Электронная почта" required>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" id="login-password" class="password" placeholder="Пароль" required>
+                    </div>
+
+                    <div class="passchange-text">
+                        <p>Забыли пароль? pochta@mail.ru</p>
+                    </div>
+
+                    <div class="input-field button">
+                        <input type="submit" value="Войти">
+                    </div>
+                </form>
+                <div class="login-signup">
+                    <span class="text">Не зарегистрированы?
+                        <a href="#" class="text signup-link">Регистрация</a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form signup">
+                <span class="title">Регистрация</span>
+                <form id="register-form">
+                    <div class="input-field">
+                        <input type="text" id="register-username" placeholder="Логин" required>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" id="register-email" placeholder="Электронная почта" required>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" id="register-password" class="password" placeholder="Пароль" required>
+                    </div>
+                    <div class="input-field button">
+                        <input type="submit" value="Зарегистрироваться">
+                    </div>
+                </form>
+                <div class="login-signup">
+                    <span class="text">Уже зарегистрированы?
+                        <a href="#" class="text login-link">Авторизация</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="auth.js"></script> 
+</body>
+</html>
