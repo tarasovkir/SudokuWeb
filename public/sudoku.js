@@ -421,6 +421,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const emailField = document.getElementById('email');
     const passwordField = document.getElementById('new-password');
     const changePasswordBtn = document.getElementById('change-password-btn');
+    const passreq = document.getElementById('pochtatext');
+
 
     const userId = getUserId();
 
@@ -444,10 +446,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             emailField.style.display = 'block';
             passwordField.style.display = 'block';
             changePasswordBtn.style.display = 'block';
+            passreq.style.display = 'none';
         } else {
             emailField.style.display = 'none';
             passwordField.style.display = 'none';
             changePasswordBtn.style.display = 'none';
+            passreq.style.display = 'block';
         }
     } catch (error) {
         console.error('Error handling user role:', error.message);
