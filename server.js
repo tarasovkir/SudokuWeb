@@ -10,9 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Добавлено
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
-mongoose.connect('mongodb://localhost:27017/sudokuDB').then(() => console.log('Connected to database'))
+mongoose.connect('mongodb+srv://qwertfy59:qwertfy59@db.an5vfcw.mongodb.net/?retryWrites=true&w=majority&appName=db')
+    .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
 
 // Middleware для проверки авторизации
@@ -26,12 +27,12 @@ function checkAuth(req, res, next) {
 
 // Маршрут для страницы аутентификации
 app.get('/auth', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'auth.html'));
+    res.sendFile(path.join(__dirname, 'auth.html'));
 });
 
 // Маршрут для страницы игры (защищенный маршрут)
 app.get('/game', checkAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'sudoku.html'));
+    res.sendFile(path.join(__dirname, 'sudoku.html'));
 });
 
 // Маршрут для главной страницы (перенаправление на auth)
