@@ -4,13 +4,66 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const User = require('./models/User');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true })); // Добавлено
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb://localhost:27017/sudokuDB').then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
+
+// Middleware для проверки авторизации
+function checkAuth(req, res, next) {
+    if (req.cookies.authenticated === 'true') {
+        next();
+    } else {
+        res.redirect('/auth');
+    }
+}
+
+// Маршрут для страницы аутентификации
+app.get('/auth', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'auth.html'));
+});
+
+// Маршрут для страницы игры (защищенный маршрут)
+app.get('/game', checkAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sudoku.html'));
+});
+
+// Маршрут для главной страницы (перенаправление на auth)
+app.get('/', (req, res) => {
+    res.redirect('/auth');
+});
+
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (user && await bcrypt.compare(password, user.password)) {
+            res.cookie('authenticated', 'true', { maxAge: 900000 });
+            res.status(200).json({ message: 'Login successful', userId: user._id });
+        } else {
+            res.status(401).json({ message: 'Invalid email or password' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+function maskEmail(email) {
+    const [localPart, domain] = email.split('@');
+    const maskedLocalPart = localPart[0] + '*****' + localPart.slice(-1);
+    return `${maskedLocalPart}@${domain}`;
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
 
 app.post('/api/register', async (req, res) => {
     try {
@@ -33,22 +86,13 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-function maskEmail(email) {
-    const [localPart, domain] = email.split('@');
-    const maskedLocalPart = localPart[0] + '*****' + localPart.slice(-1);
-    return `${maskedLocalPart}@${domain}`;
-  }  
-
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
+// Добавлено обработка ошибки при аутентификации
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (user && await bcrypt.compare(password, user.password)) {
+            res.cookie('authenticated', 'true', { maxAge: 900000 });
             res.status(200).json({ message: 'Login successful', userId: user._id });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
@@ -70,7 +114,6 @@ app.get('/api/profile/:id/role', async (req, res) => {
     }
 });
 
-
 app.put('/api/profile/password', async (req, res) => {
     try {
         const { email, newPassword } = req.body;
@@ -88,8 +131,6 @@ app.put('/api/profile/password', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-
 
 app.get('/api/user/:userId/records/:difficulty', async (req, res) => {
     try {
@@ -123,7 +164,6 @@ app.put('/api/profile/:userId/records', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 app.get('/api/profile/:id', async (req, res) => {
     try {

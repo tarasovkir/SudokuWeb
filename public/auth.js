@@ -56,9 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 alert(result.message);
                 localStorage.setItem('userId', result.userId);
-                window.location.href = 'sudoku.html';
+                window.location.href = '/game';
             } else {
-                alert(result.message);
+                alert(result.error || result.message);
             }
         } catch (error) {
             alert('Ошибка при авторизации');
