@@ -1,16 +1,35 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const User = require('./models/User');
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb://localhost:27017/sudokuDB').then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
+
+function requireAuth(req, res, next) {
+    const userId = req.cookies.userId;
+    if (userId) {
+        next();
+    } else {
+        res.redirect('/auth.html');
+    }
+}
+
+app.get('/game', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sudoku.html'));
+});
+
+app.get('/', (req, res) => {
+    res.redirect('/auth.html');
+});
 
 app.post('/api/register', async (req, res) => {
     try {
@@ -49,7 +68,9 @@ app.post('/api/login', async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (user && await bcrypt.compare(password, user.password)) {
-            res.status(200).json({ message: 'Login successful', userId: user._id });
+            // Устанавливаем cookie с идентификатором пользователя
+            res.cookie('userId', user._id, { httpOnly: true });
+            res.status(200).redirect('/game');
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }
