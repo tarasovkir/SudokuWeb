@@ -479,4 +479,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error updating password:', error.message);
         }
     });
+
+    fetch('/api/top-records')
+            .then(response => response.json())
+            .then(data => {
+                // Populate HTML tables with data
+                const difficulties = ['difficulty1', 'difficulty2', 'difficulty3', 'difficulty4', 'difficulty5'];
+
+                difficulties.forEach(difficulty => {
+                    const table = document.getElementById(`${difficulty}-table`);
+                    const records = data[difficulty];
+
+                    records.forEach(record => {
+                        const row = table.insertRow();
+                        row.insertCell(0).innerText = record.place;
+                        row.insertCell(1).innerText = record.username;
+                        row.insertCell(2).innerText = record.time;
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching top records:', error));
 });

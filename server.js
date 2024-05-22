@@ -16,6 +16,33 @@ mongoose.connect('mongodb+srv://qwertfy59:qwertfy59@db.an5vfcw.mongodb.net/?retr
     .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
 
+
+// Add a new route to fetch top records for each difficulty level
+app.get('/api/top-records', async (req, res) => {
+    try {
+        const topRecords = {};
+        const difficulties = ['difficulty1', 'difficulty2', 'difficulty3', 'difficulty4', 'difficulty5'];
+
+        for (const difficulty of difficulties) {
+            const records = await User.find({}).sort({ [`records.${difficulty}`]: 1 }).limit(25);
+
+            // Фильтруем записи, у которых время равно 0
+            const filteredRecords = records.filter(record => record.records[difficulty] !== 0);
+
+            topRecords[difficulty] = filteredRecords.map((record, index) => ({
+                place: index + 1,
+                username: record.username,
+                time: record.records[difficulty]
+            }));
+        }
+
+        res.status(200).json(topRecords);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+    
 // Middleware для проверки авторизации
 function checkAuth(req, res, next) {
     if (req.cookies.authenticated === 'true') {
