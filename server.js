@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true })); // Добавлено
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 mongoose.connect('mongodb+srv://qwertfy59:qwertfy59@db.an5vfcw.mongodb.net/?retryWrites=true&w=majority&appName=db')
@@ -17,16 +17,12 @@ mongoose.connect('mongodb+srv://qwertfy59:qwertfy59@db.an5vfcw.mongodb.net/?retr
     .catch(err => console.error('Database connection error:', err));
 
 
-// Add a new route to fetch top records for each difficulty level
 app.get('/api/top-records', async (req, res) => {
     try {
         const topRecords = {};
         const difficulties = ['difficulty1', 'difficulty2', 'difficulty3', 'difficulty4', 'difficulty5'];
-
         for (const difficulty of difficulties) {
             const records = await User.find({}).sort({ [`records.${difficulty}`]: 1 }).limit(25);
-
-            // Фильтруем записи, у которых время равно 0
             const filteredRecords = records.filter(record => record.records[difficulty] !== 0);
 
             topRecords[difficulty] = filteredRecords.map((record, index) => ({
@@ -41,9 +37,6 @@ app.get('/api/top-records', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-    
-// Middleware для проверки авторизации
 function checkAuth(req, res, next) {
     if (req.cookies.authenticated === 'true') {
         next();
@@ -52,17 +45,14 @@ function checkAuth(req, res, next) {
     }
 }
 
-// Маршрут для страницы аутентификации
 app.get('/auth', (req, res) => {
     res.sendFile(path.join(__dirname, 'auth.html'));
 });
 
-// Маршрут для страницы игры (защищенный маршрут)
 app.get('/game', checkAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'sudoku.html'));
 });
 
-// Маршрут для главной страницы (перенаправление на auth)
 app.get('/', (req, res) => {
     res.redirect('/auth');
 });
@@ -97,12 +87,10 @@ app.post('/api/register', async (req, res) => {
     try {
         const { email, username, password } = req.body;
         
-        // Проверка валидности email
         if (!validateEmail(email)) {
             return res.status(400).json({ error: 'Invalid email format' });
         }
 
-        // Хэширование пароля
         const hashedPassword = await bcrypt.hash(password, 10);
         
         const maskedEmail = maskEmail(email);
@@ -114,7 +102,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Добавлено обработка ошибки при аутентификации
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -148,7 +135,6 @@ app.put('/api/profile/password', async (req, res) => {
         if (!email || !newPassword) {
             return res.status(400).json({ error: 'Email and new password are required' });
         }
-        // Находим пользователя по email и обновляем его пароль
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         const user = await User.findOneAndUpdate({ email }, { password: hashedPassword });
         if (!user) {

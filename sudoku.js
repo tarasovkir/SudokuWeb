@@ -261,13 +261,9 @@ async function getAndCheckSudokuGrid() {
     if (mistakes === 0) {
         pauseTimer();
         const userId = getUserId();
-        console.log(userId);
         const solvingTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
-        console.log(solvingTimeInSeconds);
         const selectedDifficulty = getSelectedDifficulty();
-        console.log(selectedDifficulty);
         const currentRecord = await getCurrentRecord(userId, selectedDifficulty);
-        console.log(currentRecord);
         if (currentRecord == 0 || currentRecord > solvingTimeInSeconds) {
             await sendRecordToServer(userId, selectedDifficulty, solvingTimeInSeconds);
         }
@@ -479,11 +475,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error updating password:', error.message);
         }
     });
-
     fetch('/api/top-records')
             .then(response => response.json())
             .then(data => {
-                // Populate HTML tables with data
                 const difficulties = ['difficulty1', 'difficulty2', 'difficulty3', 'difficulty4', 'difficulty5'];
 
                 difficulties.forEach(difficulty => {

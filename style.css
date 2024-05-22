@@ -134,8 +134,8 @@ button:hover {
     transform: translate(-50%, -50%);
     background-color: #ffffff;
     box-sizing: border-box;
-    max-height: 90vh; /* Ensure it doesn't go off the screen */
-    overflow-y: auto; /* Add scroll if content exceeds viewport height */
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .close {
@@ -174,7 +174,7 @@ button:hover {
 }
 
 .pochtatext {
-    margin-top: auto; /* Pushes the element to the bottom */
+    margin-top: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -183,7 +183,7 @@ button:hover {
 
 .records-container {
     margin: 20px 0;
-    overflow-x: auto; /* Ensure tables are scrollable if they overflow */
+    overflow-x: auto;
 }
 
 .records-table {
@@ -281,9 +281,8 @@ button:hover {
         font-size: 14px;
     }
 
-    /* Изменения для радио-кнопок */
     .input-container input[type="radio"] {
-        transform: scale(0.8); /* Уменьшаем размер радио-кнопок */
+        transform: scale(0.8);
     }
 }
 
