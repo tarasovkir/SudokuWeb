@@ -407,6 +407,7 @@ async function sendRecordToServer(userId, difficulty, record) {
             body: JSON.stringify({ difficulty, newRecord: record })
         });
         const data = await response.json();
+        alert(data.message);
         console.log(data.message);
     } catch (error) {
         console.error('Error updating record:', error.message);

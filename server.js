@@ -63,9 +63,9 @@ app.post('/api/login', async (req, res) => {
         const user = await User.findOne({ email });
         if (user && await bcrypt.compare(password, user.password)) {
             res.cookie('authenticated', 'true', { maxAge: 900000 });
-            res.status(200).json({ message: 'Login successful', userId: user._id });
+            res.status(200).json({ message: 'Успешный вход', userId: user._id });
         } else {
-            res.status(401).json({ message: 'Invalid email or password' });
+            res.status(401).json({ message: 'Неверные почта или пароль' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -80,7 +80,21 @@ function maskEmail(email) {
 
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    const englishLettersRegex = /^[a-zA-Z0-9._%+-@]+$/;
+    if (emailRegex.test(email) && englishLettersRegex.test(email)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function validatePassword(password) {
+    const englishLettersRegex = /^[a-zA-Z0-9._%+-@]+$/;
+    if (englishLettersRegex.test(password)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 app.post('/api/register', async (req, res) => {
@@ -88,7 +102,10 @@ app.post('/api/register', async (req, res) => {
         const { email, username, password } = req.body;
         
         if (!validateEmail(email)) {
-            return res.status(400).json({ error: 'Invalid email format' });
+            return res.status(400).json({ error: 'Неверный формат электронной почты' });
+        }
+        if (!validatePassword(password)) {
+            return res.status(400).json({ error: 'Неверный формат пароля' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -96,32 +113,18 @@ app.post('/api/register', async (req, res) => {
         const maskedEmail = maskEmail(email);
         const user = new User({ email, maskedEmail, username, password: hashedPassword });
         await user.save();
-        res.status(201).json({ message: 'User created successfully' });
+        res.status(201).json({ message: 'Аккаунт создан' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-app.post('/api/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if (user && await bcrypt.compare(password, user.password)) {
-            res.cookie('authenticated', 'true', { maxAge: 900000 });
-            res.status(200).json({ message: 'Login successful', userId: user._id });
-        } else {
-            res.status(401).json({ message: 'Invalid email or password' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 app.get('/api/profile/:id/role', async (req, res) => {
     try {
         const user = await User.findById(req.params.id).select('role');
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Пользователь не найден' });
         }
         res.status(200).json({ role: user.role });
     } catch (error) {
@@ -133,14 +136,14 @@ app.put('/api/profile/password', async (req, res) => {
     try {
         const { email, newPassword } = req.body;
         if (!email || !newPassword) {
-            return res.status(400).json({ error: 'Email and new password are required' });
+            return res.status(400).json({ error: 'Требуются почта и новый пароль' });
         }
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         const user = await User.findOneAndUpdate({ email }, { password: hashedPassword });
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Пользователь не найден' });
         }
-        res.status(200).json({ message: 'Password updated successfully' });
+        res.status(200).json({ message: 'Пароль обновлен' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -151,11 +154,11 @@ app.get('/api/user/:userId/records/:difficulty', async (req, res) => {
         const { userId, difficulty } = req.params;
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Пользователь не найден' });
         }
         const userRecord = user.records[difficulty];
         if (userRecord === undefined) {
-            return res.status(404).json({ error: 'Record not found for this difficulty' });
+            return res.status(404).json({ error: 'Рекорд не найден' });
         }
         res.status(200).json({ [difficulty]: userRecord });
     } catch (error) {
@@ -173,7 +176,7 @@ app.put('/api/profile/:userId/records', async (req, res) => {
 
         await User.updateOne({ _id: userId }, { $set: update });
 
-        res.status(200).json({ message: 'Record updated successfully' });
+        res.status(200).json({ message: 'Рекорд обновлен' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -191,7 +194,7 @@ app.get('/api/profile/:id', async (req, res) => {
 app.put('/api/profile/:id', async (req, res) => {
     try {
         await User.findByIdAndUpdate(req.params.id, req.body);
-        res.status(200).json({ message: 'Profile updated successfully' });
+        res.status(200).json({ message: 'Профиль обновлен' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
