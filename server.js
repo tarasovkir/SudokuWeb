@@ -16,7 +16,6 @@ mongoose.connect('mongodb+srv://qwertfy59:qwertfy59@db.an5vfcw.mongodb.net/?retr
     .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
 
-
 app.get('/api/top-records', async (req, res) => {
     try {
         const topRecords = {};
@@ -24,19 +23,18 @@ app.get('/api/top-records', async (req, res) => {
         for (const difficulty of difficulties) {
             const records = await User.find({}).sort({ [`records.${difficulty}`]: 1 }).limit(25);
             const filteredRecords = records.filter(record => record.records[difficulty] !== 0);
-
             topRecords[difficulty] = filteredRecords.map((record, index) => ({
                 place: index + 1,
                 username: record.username,
                 time: record.records[difficulty]
             }));
         }
-
         res.status(200).json(topRecords);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 function checkAuth(req, res, next) {
     if (req.cookies.authenticated === 'true') {
         next();
@@ -107,9 +105,7 @@ app.post('/api/register', async (req, res) => {
         if (!validatePassword(password)) {
             return res.status(400).json({ error: 'Неверный формат пароля' });
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
-        
         const maskedEmail = maskEmail(email);
         const user = new User({ email, maskedEmail, username, password: hashedPassword });
         await user.save();
@@ -118,7 +114,6 @@ app.post('/api/register', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 app.get('/api/profile/:id/role', async (req, res) => {
     try {
@@ -170,12 +165,9 @@ app.put('/api/profile/:userId/records', async (req, res) => {
     try {
         const { userId } = req.params;
         const { difficulty, newRecord } = req.body;
-
         const update = {};
         update[`records.${difficulty}`] = newRecord;
-
         await User.updateOne({ _id: userId }, { $set: update });
-
         res.status(200).json({ message: 'Рекорд обновлен' });
     } catch (error) {
         res.status(500).json({ error: error.message });

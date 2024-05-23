@@ -32,7 +32,6 @@ function fillGrid(grid, row, col) {
     }
     const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     nums.sort(() => Math.random() - 0.5);
-
     for (let num of nums) {
         if (isValid(grid, row, col, num)) {
             grid[row][col] = num;
@@ -168,12 +167,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return { row: parseInt(row), col: parseInt(col) };
     }
     generateAndFillSudokuGrid();    
-
     document.getElementById('profile-button').addEventListener('click', function(event) {
         event.preventDefault();
         document.getElementById('profile-window').style.display = 'block';
     });
-    
     document.querySelector('.close').addEventListener('click', function() {
         document.getElementById('profile-window').style.display = 'none';
     });
@@ -377,7 +374,6 @@ function getSelectedDifficulty() {
     }
 }
 
-
 async function getCurrentRecord(userId, difficulty) {
     const userRecord = await getUserRecords(userId, difficulty);
     return userRecord[difficulty];
@@ -419,10 +415,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const passwordField = document.getElementById('new-password');
     const changePasswordBtn = document.getElementById('change-password-btn');
     const passreq = document.getElementById('pochtatext');
-
-
     const userId = getUserId();
-
     async function getUserRole(userId) {
         try {
             const response = await fetch(`/api/profile/${userId}/role`);
@@ -465,11 +458,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 body: JSON.stringify({ email, newPassword })
             });
-
             if (!response.ok) {
                 throw new Error('Failed to update password');
             }
-
             const data = await response.json();
             console.log(data.message);
         } catch (error) {

@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     login.addEventListener("click", () => {
         container.classList.remove("active");
     });
+    
     document.querySelector('.form.signup form').addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = event.target.querySelector('input[placeholder="Логин"]').value;
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('Ошибка при регистрации');
         }
     });
+
     document.querySelector('.form.login form').addEventListener('submit', async (event) => {
         event.preventDefault();
         const email = event.target.querySelector('input[placeholder="Электронная почта"]').value;
