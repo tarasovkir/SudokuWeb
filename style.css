@@ -35,14 +35,15 @@ table {
     transition: all 0.3s ease-in-out;
 }
 
-table tr:nth-child(3n) td,
-table tr:nth-child(3n+3) td {
+#sudoku-grid tr:nth-child(3n) td,
+#sudoku-grid tr:nth-child(3n+3) td {
     border-bottom: 2px solid #000;
 }
 
-table td:nth-child(3n) {
+#sudoku-grid td:nth-child(3n) {
     border-right: 2px solid #000;
 }
+Этот C
 
 input {
     outline: none;
@@ -97,13 +98,13 @@ button:hover {
 
 .input-container {
     position: relative;
-    width: 7rem;
+    width: 5rem;
     margin: 0rem;
 }
 
 .input-container input {
-    height: 50%;
-    width: 50%;
+    height: 40%;
+    width: 30%;
 }
 
 .timer-container {
@@ -210,13 +211,7 @@ button:hover {
     font-weight: bold;
 }
 
-.records-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
 
-.records-table tr:hover {
-    background-color: #f1f1f1;
-}
 
 .input-field input[type="email"],
 .input-field input[type="password"],
@@ -245,7 +240,6 @@ button:hover {
 }
 
 
-/* Media Queries */
 @media (max-width: 768px) {
     .cell {
         width: 30px;
@@ -284,6 +278,10 @@ button:hover {
     .input-container input[type="radio"] {
         transform: scale(0.8);
     }
+
+    .radio-tile  {
+        transform: scale(0.7);
+    }
 }
 
 @media (max-width: 480px) {
@@ -321,6 +319,9 @@ button:hover {
         font-size: 12px;
     }
     .input-container input[type="radio"] {
+        transform: scale(0.7);
+    }
+    .radio-tile  {
         transform: scale(0.7);
     }
 }
