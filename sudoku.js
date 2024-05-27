@@ -220,6 +220,16 @@ async function generateAndFillSudokuGrid() {
             }
         }
     }
+    const userCId = getUserId();
+    const selectedCDifficulty = getSelectedDifficulty();
+    const besttime = await getCurrentRecord(userCId, selectedCDifficulty);
+    var pers_rec_label = document.getElementById("p-r-t");
+    if (besttime != 0) {
+        pers_rec_label.innerHTML = "Личный рекорд: " + besttime + " сек.";
+    }
+    else {
+        pers_rec_label.innerHTML = "Личный рекорд не установлен";
+    }
 }
 
 async function getAndCheckSudokuGrid() {
@@ -369,7 +379,7 @@ function getSelectedDifficulty() {
     for (const radioButton of difficultyRadios) {
         if (radioButton.checked) {
             const value = radioButton.value;
-            return `difficulty${value}`;
+            return `difficulty${value[0]}`;
         }
     }
 }
