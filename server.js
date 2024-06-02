@@ -105,6 +105,10 @@ app.post('/api/register', async (req, res) => {
         if (!validatePassword(password)) {
             return res.status(400).json({ error: 'Неверный формат пароля' });
         }
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Пользователь с таким email или логином уже существует' });
+        }
         const hashedPassword = await bcrypt.hash(password, 10);
         const maskedEmail = maskEmail(email);
         const user = new User({ email, maskedEmail, username, password: hashedPassword });
